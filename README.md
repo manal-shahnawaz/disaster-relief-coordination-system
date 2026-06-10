@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # DISASTER RELIEF COORDINATION SYSTEM
 
 Disaster Relief Coordination System is a full-stack database project for managing disaster events, victims, volunteers, shelters, supply logistics, organizations, and donation tracking in real-time relief operations.
@@ -264,3 +265,7 @@ node server.js
 - node_modules/
 - .env
 - .log
+=======
+# disaster-relief-coordination-system
+Full-Stack Disaster Relief Management System | Oracle SQL | Node.js | REST API | HTML/CSS
+>>>>>>> 854ff2baeae73c59a2fe738fed46e1ea14d3c87b
