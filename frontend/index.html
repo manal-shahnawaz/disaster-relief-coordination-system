@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRCS — Disaster Relief Coordination System</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="shell">
+
+<!-- ===== TOPBAR ===== -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-icon">🆘</div>
+    <div>
+      <div class="brand-text">DRCS</div>
+      <div class="brand-sub">Disaster Relief Coordination System</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+  </div>
+</header>
+
+<!-- ===== SIDEBAR ===== -->
+<aside>
+  <div class="nav-group">
+    <div class="nav-group-label">Overview</div>
+    <button class="nav-link active" onclick="nav('dashboard',this)">
+      <span class="nav-icon"><i class="fas fa-chart-line"></i></span> Dashboard
+    </button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Core Entities</div>
+    <button class="nav-link" onclick="nav('disasters',this)">
+      <span class="nav-icon"><i class="fas fa-fire"></i></span> Disasters <span class="nav-count" id="nc-disasters">—</span>
+    </button>
+    <button class="nav-link" onclick="nav('persons',this)">
+      <span class="nav-icon"><i class="fas fa-users"></i></span> Persons <span class="nav-count" id="nc-persons">—</span>
+    </button>
+    <button class="nav-link" onclick="nav('victims',this)">
+      <span class="nav-icon"><i class="fas fa-user-injured"></i></span> Victims <span class="nav-count" id="nc-victims">—</span>
+    </button>
+    <button class="nav-link" onclick="nav('volunteers',this)">
+      <span class="nav-icon"><i class="fas fa-hands-helping"></i></span> Volunteers <span class="nav-count" id="nc-volunteers">—</span>
+    </button>
+    <button class="nav-link" onclick="nav('shelters',this)">
+      <span class="nav-icon"><i class="fas fa-building"></i></span> Shelters <span class="nav-count" id="nc-shelters">—</span>
+    </button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Logistics</div>
+    <button class="nav-link" onclick="nav('supplies',this)">
+      <span class="nav-icon"><i class="fas fa-boxes"></i></span> Supplies <span class="nav-count" id="nc-supplies">—</span>
+    </button>
+    <button class="nav-link" onclick="nav('hubs',this)">
+      <span class="nav-icon"><i class="fas fa-warehouse"></i></span> Logistics Hubs <span class="nav-count" id="nc-hubs">—</span>
+    </button>
+    <button class="nav-link" onclick="nav('orgs',this)">
+      <span class="nav-icon"><i class="fas fa-handshake"></i></span> Organizations <span class="nav-count" id="nc-orgs">—</span>
+    </button>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Donations</div>
+    <button class="nav-link" onclick="nav('donors',this)">
+      <span class="nav-icon"><i class="fas fa-donate"></i></span> Donors <span class="nav-count" id="nc-donors">—</span>
+    </button>
+    <button class="nav-link" onclick="nav('donations',this)">
+      <span class="nav-icon"><i class="fas fa-coins"></i></span> Donations <span class="nav-count" id="nc-donations">—</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page active">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Command Center</div>
+      <div class="page-meta">Real-time disaster operations status</div>
+    </div>
+  </div>
+
+  <div class="stats" id="stats-grid">
+    <div class="stat">
+      <div class="stat-accent" style="background:linear-gradient(90deg,var(--fire),var(--fire2))"></div>
+      <div class="stat-label">Active Disasters</div>
+      <div class="stat-val" id="s-disasters">—</div>
+      <div class="stat-sub">ongoing events</div>
+    </div>
+    <div class="stat">
+      <div class="stat-accent" style="background:linear-gradient(90deg,var(--gold),var(--ember))"></div>
+      <div class="stat-label">Victims Registered</div>
+      <div class="stat-val" id="s-victims">—</div>
+      <div class="stat-sub">total records</div>
+    </div>
+    <div class="stat">
+      <div class="stat-accent" style="background:linear-gradient(90deg,var(--lime),var(--ice))"></div>
+      <div class="stat-label">Volunteers</div>
+      <div class="stat-val" id="s-volunteers">—</div>
+      <div class="stat-sub">deployed personnel</div>
+    </div>
+    <div class="stat">
+      <div class="stat-accent" style="background:linear-gradient(90deg,var(--ice),var(--ice2))"></div>
+      <div class="stat-label">Open Shelters</div>
+      <div class="stat-val" id="s-shelters">—</div>
+      <div class="stat-sub">currently accepting</div>
+    </div>
+    <div class="stat">
+      <div class="stat-accent" style="background:linear-gradient(90deg,var(--rose),#f43f5e)"></div>
+      <div class="stat-label">Donations Received</div>
+      <div class="stat-val" id="s-donations">—</div>
+      <div class="stat-sub">PKR confirmed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-accent" style="background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div>
+      <div class="stat-label">Supply Units</div>
+      <div class="stat-val" id="s-supplies">—</div>
+      <div class="stat-sub">total inventory</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">Activity Log</div>
+        <div class="record-count" id="log-count">0 operations</div>
+      </div>
+    </div>
+    <table>
+      <thead><tr>
+        <th>Time</th><th>Operation</th><th>Table</th><th>Record ID</th><th>Result</th>
+      </tr></thead>
+      <tbody id="log-body">
+        <tr class="empty-row"><td colspan="5">No CRUD operations yet. Use the tables to interact with Oracle.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DISASTERS -->
+<div id="page-disasters" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Disasters</div>
+      <div class="page-meta">TABLE: DISASTER — PK: DisasterID</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('dis-add')">＋ Add Disaster</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-disasters">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search disasters…" oninput="filterTbl('tbl-disasters',this.value)">
+      </div>
+    </div>
+    <table id="tbl-disasters">
+      <thead><tr><th>ID</th><th>Type</th><th>Severity</th><th>Start Date</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="body-disasters"><tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PERSONS -->
+<div id="page-persons" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Persons</div>
+      <div class="page-meta">TABLE: PERSON — Superclass (disjoint: Victim | Volunteer)</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('per-add')">＋ Add Person</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-persons">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search persons…" oninput="filterTbl('tbl-persons',this.value)">
+      </div>
+    </div>
+    <table id="tbl-persons">
+      <thead><tr><th>ID</th><th>Name</th><th>Gender</th><th>Contact</th><th>City</th><th>District</th><th>Actions</th></tr></thead>
+      <tbody id="body-persons"><tr class="empty-row"><td colspan="7"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- VICTIMS -->
+<div id="page-victims" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Victims</div>
+      <div class="page-meta">TABLE: VICTIM — FK: PersonID (subclass) · Multivalued: VICTIM_NEEDS</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('vic-add')">＋ Register Victim</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-victims">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search victims…" oninput="filterTbl('tbl-victims',this.value)">
+      </div>
+    </div>
+    <table id="tbl-victims">
+      <thead><tr><th>Victim ID</th><th>Person ID</th><th>Name</th><th>Injury Status</th><th>Reg. Date</th><th>Actions</th></tr></thead>
+      <tbody id="body-victims"><tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- VOLUNTEERS -->
+<div id="page-volunteers" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Volunteers</div>
+      <div class="page-meta">TABLE: VOLUNTEER — FK: PersonID, OrgID · Multivalued: VOLUNTEER_SKILLS</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('vol-add')">＋ Add Volunteer</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-volunteers">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search volunteers…" oninput="filterTbl('tbl-volunteers',this.value)">
+      </div>
+    </div>
+    <table id="tbl-volunteers">
+      <thead><tr><th>ID</th><th>Name</th><th>Training</th><th>Availability</th><th>Organization</th><th>Actions</th></tr></thead>
+      <tbody id="body-volunteers"><tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SHELTERS -->
+<div id="page-shelters" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Shelters</div>
+      <div class="page-meta">TABLE: SHELTER — Derived: AvailableSpace = Capacity − CurrOccupancy</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('shl-add')">＋ Add Shelter</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-shelters">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search shelters…" oninput="filterTbl('tbl-shelters',this.value)">
+      </div>
+    </div>
+    <table id="tbl-shelters">
+      <thead><tr><th>ID</th><th>City</th><th>Status</th><th>Capacity</th><th>Occupancy</th><th>Available Space</th><th>Actions</th></tr></thead>
+      <tbody id="body-shelters"><tr class="empty-row"><td colspan="7"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SUPPLIES -->
+<div id="page-supplies" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Supplies</div>
+      <div class="page-meta">TABLE: SUPPLY + FOOD_SUPPLY / MEDICAL_SUPPLY / EQUIPMENT_SUPPLY (disjoint specialization)</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('sup-add')">＋ Add Supply</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-supplies">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search supplies…" oninput="filterTbl('tbl-supplies',this.value)">
+      </div>
+    </div>
+    <table id="tbl-supplies">
+      <thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Subtype</th><th>Qty</th><th>Expiry</th><th>Hub</th><th>Actions</th></tr></thead>
+      <tbody id="body-supplies"><tr class="empty-row"><td colspan="8"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- HUBS -->
+<div id="page-hubs" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Logistics Hubs</div>
+      <div class="page-meta">TABLE: LOGISTICS_HUB — PK: HubID</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('hub-add')">＋ Add Hub</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-hubs">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search hubs…" oninput="filterTbl('tbl-hubs',this.value)">
+      </div>
+    </div>
+    <table id="tbl-hubs">
+      <thead><tr><th>Hub ID</th><th>Status</th><th>Storage Capacity</th><th>Lat</th><th>Lng</th><th>Actions</th></tr></thead>
+      <tbody id="body-hubs"><tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ORGS -->
+<div id="page-orgs" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Organizations</div>
+      <div class="page-meta">TABLE: ORGANIZATION — NGOs & Government Bodies</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('org-add')">＋ Add Organization</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-orgs">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search orgs…" oninput="filterTbl('tbl-orgs',this.value)">
+      </div>
+    </div>
+    <table id="tbl-orgs">
+      <thead><tr><th>ID</th><th>Name</th><th>Type</th><th>Phone</th><th>Email</th><th>Actions</th></tr></thead>
+      <tbody id="body-orgs"><tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DONORS -->
+<div id="page-donors" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Donors</div>
+      <div class="page-meta">TABLE: DONOR — External entity</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('don-add')">＋ Add Donor</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-donors">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search donors…" oninput="filterTbl('tbl-donors',this.value)">
+      </div>
+    </div>
+    <table id="tbl-donors">
+      <thead><tr><th>ID</th><th>Name</th><th>Contact</th><th>Actions</th></tr></thead>
+      <tbody id="body-donors"><tr class="empty-row"><td colspan="4"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DONATIONS -->
+<div id="page-donations" class="page">
+  <div class="page-head">
+    <div>
+      <div class="page-title">Donations</div>
+      <div class="page-meta">TABLE: DONATION — Relationships: MAKES (Donor→Donation), RECEIVED_BY (Donation→Org)</div>
+    </div>
+    <button class="btn btn-fire" onclick="openModal('dnt-add')">＋ Add Donation</button>
+  </div>
+  <div class="card">
+    <div class="card-toolbar">
+      <div class="card-toolbar-left">
+        <div class="card-title">All Records</div>
+        <div class="record-count" id="cnt-donations">0</div>
+      </div>
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search donations…" oninput="filterTbl('tbl-donations',this.value)">
+      </div>
+    </div>
+    <table id="tbl-donations">
+      <thead><tr><th>ID</th><th>Amount (PKR)</th><th>Type</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="body-donations"><tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+</div><!-- .shell -->
+
+<!-- ============================================================ -->
+<!-- MODALS -->
+<!-- ============================================================ -->
+
+<!-- ADD/EDIT DISASTER -->
+<div class="overlay" id="modal-dis-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title" id="dis-modal-title">Add Disaster</div><div class="modal-sql">INSERT INTO DISASTER VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('dis-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Disaster ID</label><input id="d-id" placeholder="DIS005"></div>
+        <div class="field"><label>Type</label><input id="d-type" placeholder="Flood / Earthquake…"></div>
+        <div class="field"><label>Severity</label>
+          <select id="d-sev"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select>
+        </div>
+        <div class="field"><label>Status</label>
+          <select id="d-status"><option>Active</option><option>Contained</option><option>Resolved</option></select>
+        </div>
+        <div class="field full"><label>Start Date</label><input type="date" id="d-date"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('dis-add')">Cancel</button>
+      <button class="btn btn-fire" id="dis-submit-btn" onclick="submitDisaster()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT PERSON -->
+<div class="overlay" id="modal-per-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title" id="per-modal-title">Add Person</div><div class="modal-sql">INSERT INTO PERSON VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('per-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Person ID</label><input id="p-id" placeholder="PER009"></div>
+        <div class="field"><label>Full Name</label><input id="p-name" placeholder="Ahmed Khan"></div>
+        <div class="field"><label>Date of Birth</label><input type="date" id="p-dob"></div>
+        <div class="field"><label>Gender</label>
+          <select id="p-gender"><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+        <div class="field"><label>Contact Number</label><input id="p-contact" placeholder="0300-0000000"></div>
+        <div class="field"><label>City</label><input id="p-city" placeholder="Lahore"></div>
+        <div class="field"><label>District</label><input id="p-district" placeholder="Gulberg"></div>
+        <div class="field"><label>Postal Code</label><input id="p-postal" placeholder="54000"></div>
+        <div class="field full"><label>Street / House No.</label><input id="p-street" placeholder="House 5, Street 3"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('per-add')">Cancel</button>
+      <button class="btn btn-fire" id="per-submit-btn" onclick="submitPerson()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD VICTIM -->
+<div class="overlay" id="modal-vic-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Register Victim</div><div class="modal-sql">INSERT INTO VICTIM VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('vic-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Victim ID</label><input id="vi-id" placeholder="VIC005"></div>
+        <div class="field"><label>Person ID</label><select id="vi-person"></select></div>
+        <div class="field"><label>Injury Status</label><input id="vi-injury" placeholder="Minor / Critical / No Injury"></div>
+        <div class="field"><label>Registration Date</label><input type="date" id="vi-date"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('vic-add')">Cancel</button>
+      <button class="btn btn-fire" onclick="submitVictim()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT VICTIM -->
+<div class="overlay" id="modal-vic-edit">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Edit Victim</div><div class="modal-sql">UPDATE VICTIM SET InjuryStatus=… WHERE VictimID=…</div></div>
+      <button class="modal-close" onclick="closeModal('vic-edit')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Victim ID</label><input id="vie-id" readonly></div>
+        <div class="field full"><label>Injury Status</label><input id="vie-injury" placeholder="Minor / Critical / No Injury / Moderate"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('vic-edit')">Cancel</button>
+      <button class="btn btn-fire" onclick="updateVictim()">UPDATE Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD VOLUNTEER -->
+<div class="overlay" id="modal-vol-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Add Volunteer</div><div class="modal-sql">INSERT INTO VOLUNTEER VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('vol-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Volunteer ID</label><input id="vo-id" placeholder="VOL005"></div>
+        <div class="field"><label>Person ID</label><select id="vo-person"></select></div>
+        <div class="field"><label>Training Level</label><input id="vo-training" placeholder="Basic / Intermediate / Advanced"></div>
+        <div class="field"><label>Availability</label>
+          <select id="vo-avail"><option>Available</option><option>On Duty</option><option>Unavailable</option></select>
+        </div>
+        <div class="field full"><label>Organization</label><select id="vo-org"></select></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('vol-add')">Cancel</button>
+      <button class="btn btn-fire" onclick="submitVolunteer()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SHELTER -->
+<div class="overlay" id="modal-shl-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title" id="shl-modal-title">Add Shelter</div><div class="modal-sql">INSERT INTO SHELTER VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('shl-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Shelter ID</label><input id="sh-id" placeholder="SHL005"></div>
+        <div class="field"><label>Status</label>
+          <select id="sh-status"><option>Open</option><option>Full</option><option>Closed</option></select>
+        </div>
+        <div class="field"><label>Capacity</label><input type="number" id="sh-cap" placeholder="500" min="1"></div>
+        <div class="field"><label>Current Occupancy</label><input type="number" id="sh-occ" placeholder="0" min="0"></div>
+        <div class="field"><label>City</label><input id="sh-city" placeholder="Lahore"></div>
+        <div class="field"><label>District</label><input id="sh-district" placeholder="Gulberg"></div>
+        <div class="field"><label>Latitude</label><input id="sh-lat" placeholder="31.5497"></div>
+        <div class="field"><label>Longitude</label><input id="sh-lng" placeholder="74.3436"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('shl-add')">Cancel</button>
+      <button class="btn btn-fire" id="shl-submit-btn" onclick="submitShelter()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SUPPLY -->
+<div class="overlay" id="modal-sup-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Add Supply</div><div class="modal-sql">INSERT INTO SUPPLY + subtype table</div></div>
+      <button class="modal-close" onclick="closeModal('sup-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Supply ID</label><input id="su-id" placeholder="SUP007"></div>
+        <div class="field"><label>Supply Name</label><input id="su-name" placeholder="Rice Bags"></div>
+        <div class="field"><label>Type</label>
+          <select id="su-type" onchange="updateSubLabel()">
+            <option value="Food">Food</option>
+            <option value="Medical">Medical</option>
+            <option value="Equipment">Equipment</option>
+          </select>
+        </div>
+        <div class="field"><label id="su-sublabel">Food Type</label><input id="su-sub" placeholder="Dry Food"></div>
+        <div class="field"><label>Quantity</label><input type="number" id="su-qty" placeholder="100" min="0"></div>
+        <div class="field"><label>Expiry Date</label><input type="date" id="su-expiry"></div>
+        <div class="field full"><label>Logistics Hub</label><select id="su-hub"></select></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('sup-add')">Cancel</button>
+      <button class="btn btn-fire" onclick="submitSupply()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD HUB -->
+<div class="overlay" id="modal-hub-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Add Logistics Hub</div><div class="modal-sql">INSERT INTO LOGISTICS_HUB VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('hub-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Hub ID</label><input id="hu-id" placeholder="HUB005"></div>
+        <div class="field"><label>Status</label>
+          <select id="hu-status"><option>Active</option><option>Inactive</option><option>Maintenance</option></select>
+        </div>
+        <div class="field"><label>Storage Capacity</label><input type="number" id="hu-cap" placeholder="50000"></div>
+        <div class="field"></div>
+        <div class="field"><label>Latitude</label><input id="hu-lat" placeholder="31.5497"></div>
+        <div class="field"><label>Longitude</label><input id="hu-lng" placeholder="74.3436"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('hub-add')">Cancel</button>
+      <button class="btn btn-fire" onclick="submitHub()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ORG -->
+<div class="overlay" id="modal-org-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title" id="org-modal-title">Add Organization</div><div class="modal-sql">INSERT INTO ORGANIZATION VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('org-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Org ID</label><input id="or-id" placeholder="ORG005"></div>
+        <div class="field"><label>Org Name</label><input id="or-name" placeholder="Relief Foundation"></div>
+        <div class="field"><label>Type</label><input id="or-type" placeholder="NGO / Government / Charity"></div>
+        <div class="field"><label>Phone</label><input id="or-phone" placeholder="0300-0000000"></div>
+        <div class="field full"><label>Email</label><input id="or-email" placeholder="contact@org.pk"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('org-add')">Cancel</button>
+      <button class="btn btn-fire" id="org-submit-btn" onclick="submitOrg()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD DONOR -->
+<div class="overlay" id="modal-don-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title">Add Donor</div><div class="modal-sql">INSERT INTO DONOR VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('don-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Donor ID</label><input id="dn-id" placeholder="DON005"></div>
+        <div class="field"><label>Donor Name</label><input id="dn-name" placeholder="Welfare Foundation"></div>
+        <div class="field full"><label>Contact</label><input id="dn-contact" placeholder="0300-0000000"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('don-add')">Cancel</button>
+      <button class="btn btn-fire" onclick="submitDonor()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD DONATION -->
+<div class="overlay" id="modal-dnt-add">
+  <div class="modal">
+    <div class="modal-head">
+      <div><div class="modal-title" id="dnt-modal-title">Add Donation</div><div class="modal-sql">INSERT INTO DONATION VALUES(…)</div></div>
+      <button class="modal-close" onclick="closeModal('dnt-add')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg">
+        <div class="field"><label>Donation ID</label><input id="dt-id" placeholder="DNT005"></div>
+        <div class="field"><label>Amount (PKR)</label><input type="number" id="dt-amount" placeholder="100000" min="1"></div>
+        <div class="field"><label>Type</label><input id="dt-type" placeholder="Cash / In-Kind"></div>
+        <div class="field"><label>Status</label>
+          <select id="dt-status"><option>Pending</option><option>Received</option><option>Allocated</option></select>
+        </div>
+        <div class="field full"><label>Donation Date</label><input type="date" id="dt-date"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('dnt-add')">Cancel</button>
+      <button class="btn btn-fire" id="dnt-submit-btn" onclick="submitDonation()">INSERT Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toasts"></div>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ============================================================ -->
+<script>
+const API = 'http://localhost:5000/api';
+const log = [];
+let editMode = {};
+
+// ============================================================
+// NAV
+// ============================================================
+function nav(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  el.classList.add('active');
+  loadPage(page);
+}
+
+function loadPage(page) {
+  const loaders = {
+    dashboard:  loadDashboard,
+    disasters:  () => loadTable('disasters'),
+    persons:    () => loadTable('persons'),
+    victims:    () => loadTable('victims'),
+    volunteers: () => loadTable('volunteers'),
+    shelters:   () => loadTable('shelters'),
+    supplies:   () => loadTable('supplies'),
+    hubs:       () => loadTable('hubs'),
+    orgs:       () => loadTable('orgs'),
+    donors:     () => loadTable('donors'),
+    donations:  () => loadTable('donations'),
+  };
+  loaders[page]?.();
+}
+
+// ============================================================
+// API HELPER
+// ============================================================
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'API error');
+  return data;
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+async function loadDashboard() {
+  try {
+    const s = await api('GET', '/stats');
+    document.getElementById('s-disasters').textContent  = s.activeDisasters;
+    document.getElementById('s-victims').textContent    = s.totalVictims;
+    document.getElementById('s-volunteers').textContent = s.totalVolunteers;
+    document.getElementById('s-shelters').textContent   = s.openShelters;
+    document.getElementById('s-donations').textContent  = (s.totalDonations/1000).toFixed(0)+'K';
+    document.getElementById('s-supplies').textContent   = s.totalSupplies.toLocaleString();
+  } catch(e) { /* silently fail on dashboard */ }
+  renderLog();
+}
+
+function renderLog() {
+  const body = document.getElementById('log-body');
+  document.getElementById('log-count').textContent = log.length + ' operations';
+  if (!log.length) {
+    body.innerHTML = '<tr class="empty-row"><td colspan="5">No CRUD operations yet. Use the tables to interact with Oracle.</td></tr>';
+    return;
+  }
+  const clsMap = {INSERT:'ab-ins', UPDATE:'ab-upd', DELETE:'ab-del'};
+  body.innerHTML = log.map(l =>
+    `<tr>
+      <td class="id-cell">${l.time}</td>
+      <td><span class="activity-badge ${clsMap[l.op]}">${l.op}</span></td>
+      <td><span style="font-family:var(--mono);font-size:11px">${l.table}</span></td>
+      <td class="id-cell">${l.id}</td>
+      <td><span class="badge badge-lime">✓ Success</span></td>
+    </tr>`
+  ).join('');
+}
+
+function addLog(op, table, id) {
+  log.unshift({ op, table, id, time: new Date().toLocaleTimeString() });
+  if (log.length > 30) log.pop();
+}
+
+// ============================================================
+// TABLE LOADERS & RENDERERS
+// ============================================================
+async function loadTable(name) {
+  try {
+    const data = await api('GET', '/' + name);
+    const nc = document.getElementById('nc-' + name);
+    const cnt = document.getElementById('cnt-' + name);
+    if (nc) nc.textContent = data.length;
+    if (cnt) cnt.textContent = data.length + ' records';
+    render[name](data);
+  } catch(e) {
+    const body = document.getElementById('body-' + name);
+    if (body) body.innerHTML = `<tr class="empty-row"><td colspan="20">⚠ ${e.message}</td></tr>`;
+  }
+}
+
+const sev = s => ({Low:'badge-ice', Medium:'badge-gold', High:'badge-fire', Critical:'badge-fire'})[s] || 'badge-muted';
+const stat = s => ({Active:'badge-fire', Contained:'badge-gold', Resolved:'badge-lime',
+                    Open:'badge-lime',   Full:'badge-gold',       Closed:'badge-muted',
+                    Available:'badge-lime', 'On Duty':'badge-gold', Unavailable:'badge-rose',
+                    Received:'badge-lime',  Pending:'badge-gold',   Allocated:'badge-ice',
+                    Inactive:'badge-muted', Maintenance:'badge-gold'})[s] || 'badge-muted';
+
+const b = (t, c) => `<span class="badge ${c}">${t}</span>`;
+const acts = (editFn, delFn) => `<div class="actions">
+  <button class="btn btn-edit" onclick="${editFn}">Edit</button>
+  <button class="btn btn-del"  onclick="${delFn}">Delete</button>
+</div>`;
+
+const render = {
+  disasters: data => {
+    document.getElementById('body-disasters').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.DISASTERID}</td>
+        <td class="name-cell">${r.DISASTERTYPE}</td>
+        <td>${b(r.SEVERITY, sev(r.SEVERITY))}</td>
+        <td>${r.STARTDATE ? r.STARTDATE.slice(0,10) : '—'}</td>
+        <td>${b(r.STATUS, stat(r.STATUS))}</td>
+        <td>${acts(`editDisaster('${r.DISASTERID}')`, `del('disasters','${r.DISASTERID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="6">No records found.</td></tr>';
+  },
+
+  persons: data => {
+    document.getElementById('body-persons').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.PERSONID}</td>
+        <td class="name-cell">${r.FULLNAME}</td>
+        <td>${b(r.GENDER, r.GENDER==='Female'?'badge-ice':'badge-gold')}</td>
+        <td style="font-family:var(--mono);font-size:11px">${r.CONTACTNUMBER||'—'}</td>
+        <td>${r.CITY||'—'}</td>
+        <td>${r.DISTRICT||'—'}</td>
+        <td>${acts(`editPerson('${r.PERSONID}')`, `del('persons','${r.PERSONID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="7">No records found.</td></tr>';
+  },
+
+  victims: data => {
+    document.getElementById('body-victims').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.VICTIMID}</td>
+        <td class="id-cell">${r.PERSONID}</td>
+        <td class="name-cell">${r.FULLNAME}</td>
+        <td>${b(r.INJURYSTATUS, r.INJURYSTATUS==='Critical'?'badge-fire':r.INJURYSTATUS==='No Injury'?'badge-lime':'badge-gold')}</td>
+        <td>${r.REGDATE||'—'}</td>
+        <td>${acts(`editVictimModal('${r.VICTIMID}','${r.INJURYSTATUS}')`, `del('victims','${r.VICTIMID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="6">No records found.</td></tr>';
+  },
+
+  volunteers: data => {
+    document.getElementById('body-volunteers').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.VOLUNTEERID}</td>
+        <td class="name-cell">${r.FULLNAME}</td>
+        <td>${r.TRAININGLEVEL||'—'}</td>
+        <td>${b(r.AVAILABILITY, stat(r.AVAILABILITY))}</td>
+        <td>${r.ORGNAME||'—'}</td>
+        <td>${acts(`editVolModal('${r.VOLUNTEERID}','${r.AVAILABILITY}','${r.TRAININGLEVEL}')`, `del('volunteers','${r.VOLUNTEERID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="6">No records found.</td></tr>';
+  },
+
+  shelters: data => {
+    document.getElementById('body-shelters').innerHTML = data.length ? data.map(r => {
+      const avail = r.AVAILABLESPACE;
+      return `<tr>
+        <td class="id-cell">${r.SHELTERID}</td>
+        <td>${r.CITY}, ${r.DISTRICT}</td>
+        <td>${b(r.STATUS, stat(r.STATUS))}</td>
+        <td>${r.CAPACITY?.toLocaleString()}</td>
+        <td>${r.CURROCCUPANCY?.toLocaleString()}</td>
+        <td><strong style="color:${avail>0?'var(--lime)':'var(--fire)'}">${avail?.toLocaleString()}</strong></td>
+        <td>${acts(`editShelterModal('${r.SHELTERID}','${r.STATUS}',${r.CAPACITY},${r.CURROCCUPANCY},'${r.CITY}','${r.DISTRICT}')`, `del('shelters','${r.SHELTERID}')`)}</td>
+      </tr>`;
+    }).join('')
+    : '<tr class="empty-row"><td colspan="7">No records found.</td></tr>';
+  },
+
+  supplies: data => {
+    const tBadge = {Food:'badge-lime', Medical:'badge-ice', Equipment:'badge-gold'};
+    document.getElementById('body-supplies').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.SUPPLYID}</td>
+        <td class="name-cell">${r.SUPPLYNAME}</td>
+        <td>${b(r.SUPPLYTYPE||'—', tBadge[r.SUPPLYTYPE]||'badge-muted')}</td>
+        <td style="color:var(--soft);font-size:11px">${r.SUBTYPE||'—'}</td>
+        <td>${r.QUANTITY?.toLocaleString()}</td>
+        <td style="font-size:11px">${r.EXPIRYDATE||'—'}</td>
+        <td class="id-cell">${r.HUBID||'—'}</td>
+        <td>${acts(`editSupplyModal('${r.SUPPLYID}',${r.QUANTITY})`, `del('supplies','${r.SUPPLYID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="8">No records found.</td></tr>';
+  },
+
+  hubs: data => {
+    document.getElementById('body-hubs').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.HUBID}</td>
+        <td>${b(r.OPERATIONALSTATUS, stat(r.OPERATIONALSTATUS))}</td>
+        <td>${r.STORAGECAPACITY?.toLocaleString()}</td>
+        <td style="font-family:var(--mono);font-size:11px">${r.LATITUDE||'—'}</td>
+        <td style="font-family:var(--mono);font-size:11px">${r.LONGITUDE||'—'}</td>
+        <td>${acts(`editHubModal('${r.HUBID}','${r.OPERATIONALSTATUS}',${r.STORAGECAPACITY})`, `del('hubs','${r.HUBID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="6">No records found.</td></tr>';
+  },
+
+  orgs: data => {
+    document.getElementById('body-orgs').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.ORGID}</td>
+        <td class="name-cell">${r.ORGNAME}</td>
+        <td>${b(r.ORGTYPE, 'badge-ice')}</td>
+        <td style="font-family:var(--mono);font-size:11px">${r.PHONE||'—'}</td>
+        <td style="font-size:11px;color:var(--soft)">${r.EMAIL||'—'}</td>
+        <td>${acts(`editOrgModal('${r.ORGID}','${r.ORGNAME}','${r.ORGTYPE}','${r.PHONE||''}','${r.EMAIL||''}')`, `del('orgs','${r.ORGID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="6">No records found.</td></tr>';
+  },
+
+  donors: data => {
+    document.getElementById('body-donors').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.DONORID}</td>
+        <td class="name-cell">${r.DONORNAME}</td>
+        <td style="font-family:var(--mono);font-size:11px">${r.DONORCONTACT||'—'}</td>
+        <td>${acts(`editDonorModal('${r.DONORID}','${r.DONORNAME}','${r.DONORCONTACT||''}')`, `del('donors','${r.DONORID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="4">No records found.</td></tr>';
+  },
+
+  donations: data => {
+    document.getElementById('body-donations').innerHTML = data.length ? data.map(r =>
+      `<tr>
+        <td class="id-cell">${r.DONATIONID}</td>
+        <td><strong>PKR ${r.AMOUNT?.toLocaleString()}</strong></td>
+        <td>${b(r.DONATIONTYPE, 'badge-ice')}</td>
+        <td>${r.DONATIONDATE||'—'}</td>
+        <td>${b(r.STATUS, stat(r.STATUS))}</td>
+        <td>${acts(`editDonationModal('${r.DONATIONID}','${r.STATUS}',${r.AMOUNT})`, `del('donations','${r.DONATIONID}')`)}</td>
+      </tr>`).join('')
+    : '<tr class="empty-row"><td colspan="6">No records found.</td></tr>';
+  },
+};
+
+// ============================================================
+// FILTER
+// ============================================================
+function filterTbl(id, q) {
+  q = q.toLowerCase();
+  document.querySelectorAll(`#${id} tbody tr`).forEach(r => {
+    r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ============================================================
+// MODAL HELPERS
+// ============================================================
+function openModal(id) { document.getElementById('modal-'+id).classList.add('open'); }
+function closeModal(id) { document.getElementById('modal-'+id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', e => {
+  if (e.target === o) o.classList.remove('open');
+}));
+
+// ============================================================
+// TOAST
+// ============================================================
+function toast(msg, type='ok') {
+  const tc = document.getElementById('toasts');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.textContent = (type === 'ok' ? '✓ ' : '✕ ') + msg;
+  tc.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ============================================================
+// DELETE (generic)
+// ============================================================
+async function del(table, id) {
+  if (!confirm(`DELETE ${id} from ${table.toUpperCase()}?\n\nThis will run: DELETE FROM ${table.toUpperCase()} WHERE ID='${id}' on Oracle XE.`)) return;
+  try {
+    await api('DELETE', `/${table}/${id}`);
+    addLog('DELETE', table.toUpperCase(), id);
+    toast(`${id} deleted from Oracle`);
+    loadTable(table);
+    renderLog();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+// ============================================================
+// DISASTERS CRUD
+// ============================================================
+let editDisId = null;
+
+function editDisaster(id) {
+  editDisId = id;
+  document.getElementById('dis-modal-title').textContent = 'Edit Disaster';
+  document.getElementById('dis-submit-btn').textContent = 'UPDATE Record';
+  // fetch the row
+  api('GET', `/disasters/${id}`).then(r => {
+    document.getElementById('d-id').value     = r.DISASTERID;
+    document.getElementById('d-id').readOnly  = true;
+    document.getElementById('d-type').value   = r.DISASTERTYPE;
+    document.getElementById('d-sev').value    = r.SEVERITY;
+    document.getElementById('d-status').value = r.STATUS;
+    document.getElementById('d-date').value   = r.STARTDATE ? r.STARTDATE.slice(0,10) : '';
+    openModal('dis-add');
+  });
+}
+
+async function submitDisaster() {
+  const body = {
+    disasterid: document.getElementById('d-id').value.trim(),
+    disastertype: document.getElementById('d-type').value,
+    severity: document.getElementById('d-sev').value,
+    status: document.getElementById('d-status').value,
+    startdate: document.getElementById('d-date').value
+  };
+  try {
+    if (editDisId) {
+      await api('PUT', `/disasters/${editDisId}`, body);
+      addLog('UPDATE','DISASTER', editDisId);
+      toast(`Disaster ${editDisId} updated`);
+    } else {
+      await api('POST', '/disasters', body);
+      addLog('INSERT','DISASTER', body.disasterid);
+      toast(`Disaster ${body.disasterid} inserted`);
+    }
+    closeModal('dis-add');
+    resetDisModal();
+    loadTable('disasters');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function resetDisModal() {
+  editDisId = null;
+  document.getElementById('dis-modal-title').textContent = 'Add Disaster';
+  document.getElementById('dis-submit-btn').textContent  = 'INSERT Record';
+  document.getElementById('d-id').readOnly = false;
+  ['d-id','d-type','d-date'].forEach(i => document.getElementById(i).value = '');
+}
+
+// ============================================================
+// PERSONS CRUD
+// ============================================================
+let editPerId = null;
+
+function editPerson(id) {
+  editPerId = id;
+  document.getElementById('per-modal-title').textContent = 'Edit Person';
+  document.getElementById('per-submit-btn').textContent  = 'UPDATE Record';
+  api('GET', `/persons/${id}`).then(r => {
+    document.getElementById('p-id').value      = r.PERSONID;
+    document.getElementById('p-id').readOnly   = true;
+    document.getElementById('p-name').value    = r.FULLNAME;
+    document.getElementById('p-gender').value  = r.GENDER;
+    document.getElementById('p-contact').value = r.CONTACTNUMBER||'';
+    document.getElementById('p-city').value    = r.CITY||'';
+    document.getElementById('p-district').value= r.DISTRICT||'';
+    document.getElementById('p-postal').value  = r.POSTALCODE||'';
+    document.getElementById('p-street').value  = r.STREET||'';
+    openModal('per-add');
+  });
+}
+
+async function submitPerson() {
+  const body = {
+    personid: document.getElementById('p-id').value.trim(),
+    fullname: document.getElementById('p-name').value,
+    dob: document.getElementById('p-dob').value,
+    gender: document.getElementById('p-gender').value,
+    contactnumber: document.getElementById('p-contact').value,
+    street: document.getElementById('p-street').value,
+    city: document.getElementById('p-city').value,
+    district: document.getElementById('p-district').value,
+    postalcode: document.getElementById('p-postal').value
+  };
+  try {
+    if (editPerId) {
+      await api('PUT', `/persons/${editPerId}`, body);
+      addLog('UPDATE','PERSON', editPerId);
+      toast(`Person ${editPerId} updated`);
+    } else {
+      await api('POST', '/persons', body);
+      addLog('INSERT','PERSON', body.personid);
+      toast(`Person ${body.personid} inserted`);
+    }
+    closeModal('per-add');
+    resetPerModal();
+    loadTable('persons');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function resetPerModal() {
+  editPerId = null;
+  document.getElementById('per-modal-title').textContent = 'Add Person';
+  document.getElementById('per-submit-btn').textContent  = 'INSERT Record';
+  document.getElementById('p-id').readOnly = false;
+  ['p-id','p-name','p-dob','p-contact','p-city','p-district','p-postal','p-street'].forEach(i => document.getElementById(i).value='');
+}
+
+// ============================================================
+// VICTIMS CRUD
+// ============================================================
+async function openModal_vicAdd() {
+  try {
+    const [persons, victims] = await Promise.all([api('GET', '/persons'), api('GET', '/victims')]);
+    const used = new Set(victims.map(v => v.PERSONID));
+    const eligible = persons.filter(p => !used.has(p.PERSONID));
+    document.getElementById('vi-person').innerHTML = eligible.length
+      ? eligible.map(p => `<option value="${p.PERSONID}">${p.PERSONID} – ${p.FULLNAME}</option>`).join('')
+      : `<option value="">No available person (all persons already registered as victims)</option>`;
+    _origOpen('vic-add');
+  } catch (e) {
+    toast(e.message || 'Failed to load persons/victims', 'err');
+  }
+}
+
+async function submitVictim() {
+  const body = {
+    victimid: document.getElementById('vi-id').value.trim(),
+    personid: document.getElementById('vi-person').value,
+    injurystatus: document.getElementById('vi-injury').value,
+    regdate: document.getElementById('vi-date').value
+  };
+  try {
+    if (!body.personid) { toast('No eligible Person available for Victim registration', 'err'); return; }
+    await api('POST', '/victims', body);
+    addLog('INSERT','VICTIM', body.victimid);
+    toast(`Victim ${body.victimid} registered`);
+    closeModal('vic-add');
+    loadTable('victims');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function editVictimModal(id, injury) {
+  document.getElementById('vie-id').value     = id;
+  document.getElementById('vie-injury').value = injury;
+  openModal('vic-edit');
+}
+
+async function updateVictim() {
+  const id = document.getElementById('vie-id').value;
+  const body = { injurystatus: document.getElementById('vie-injury').value };
+  try {
+    await api('PUT', `/victims/${id}`, body);
+    addLog('UPDATE','VICTIM', id);
+    toast(`Victim ${id} updated`);
+    closeModal('vic-edit');
+    loadTable('victims');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+// ============================================================
+// VOLUNTEERS CRUD
+// ============================================================
+async function openModal_volAdd() {
+  try {
+    const [persons, orgs, volunteers] = await Promise.all([api('GET','/persons'), api('GET','/orgs'), api('GET','/volunteers')]);
+    const used = new Set(volunteers.map(v => v.PERSONID));
+    const eligible = persons.filter(p => !used.has(p.PERSONID));
+    document.getElementById('vo-person').innerHTML = eligible.length
+      ? eligible.map(p => `<option value="${p.PERSONID}">${p.PERSONID} – ${p.FULLNAME}</option>`).join('')
+      : `<option value="">No available person (all persons already assigned as volunteers)</option>`;
+    document.getElementById('vo-org').innerHTML =
+      `<option value="">— None —</option>` +
+      orgs.map(o => `<option value="${o.ORGID}">${o.ORGNAME}</option>`).join('');
+    _origOpen('vol-add');
+  } catch (e) {
+    toast(e.message || 'Failed to load persons/volunteers/orgs', 'err');
+  }
+}
+
+async function submitVolunteer() {
+  const body = {
+    volunteerid: document.getElementById('vo-id').value.trim(),
+    personid: document.getElementById('vo-person').value,
+    traininglevel: document.getElementById('vo-training').value,
+    availability: document.getElementById('vo-avail').value,
+    orgid: document.getElementById('vo-org').value
+  };
+  try {
+    if (!body.personid) { toast('No eligible Person available for Volunteer', 'err'); return; }
+    await api('POST', '/volunteers', body);
+    addLog('INSERT','VOLUNTEER', body.volunteerid);
+    toast(`Volunteer ${body.volunteerid} added`);
+    closeModal('vol-add');
+    loadTable('volunteers');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+let editVolId = null;
+function editVolModal(id, avail, training) {
+  editVolId = id;
+  // Use prompt for quick inline edit demo
+  const newAvail = prompt(`UPDATE VOLUNTEER — Availability for ${id}:`, avail);
+  if (newAvail === null) return;
+  api('PUT', `/volunteers/${id}`, { availability: newAvail, traininglevel: training })
+    .then(() => { addLog('UPDATE','VOLUNTEER',id); toast(`Volunteer ${id} updated`); loadTable('volunteers'); renderLog(); })
+    .catch(e => toast(e.message,'err'));
+}
+
+// ============================================================
+// SHELTERS CRUD
+// ============================================================
+let editShlId = null;
+
+function editShelterModal(id, status, cap, occ, city, district) {
+  editShlId = id;
+  document.getElementById('shl-modal-title').textContent = 'Edit Shelter';
+  document.getElementById('shl-submit-btn').textContent  = 'UPDATE Record';
+  document.getElementById('sh-id').value       = id;
+  document.getElementById('sh-id').readOnly    = true;
+  document.getElementById('sh-status').value   = status;
+  document.getElementById('sh-cap').value      = cap;
+  document.getElementById('sh-occ').value      = occ;
+  document.getElementById('sh-city').value     = city;
+  document.getElementById('sh-district').value = district;
+  openModal('shl-add');
+}
+
+async function submitShelter() {
+  const cap = parseInt(document.getElementById('sh-cap').value);
+  const occ = parseInt(document.getElementById('sh-occ').value);
+  if (occ > cap) { toast('Occupancy cannot exceed Capacity (CHECK constraint)','err'); return; }
+  const body = {
+    shelterid: document.getElementById('sh-id').value.trim(),
+    status: document.getElementById('sh-status').value,
+    capacity: cap, curroccupancy: occ,
+    latitude: parseFloat(document.getElementById('sh-lat').value)||0,
+    longitude: parseFloat(document.getElementById('sh-lng').value)||0,
+    city: document.getElementById('sh-city').value,
+    district: document.getElementById('sh-district').value
+  };
+  try {
+    if (editShlId) {
+      await api('PUT', `/shelters/${editShlId}`, body);
+      addLog('UPDATE','SHELTER', editShlId);
+      toast(`Shelter ${editShlId} updated`);
+    } else {
+      await api('POST', '/shelters', body);
+      addLog('INSERT','SHELTER', body.shelterid);
+      toast(`Shelter ${body.shelterid} inserted`);
+    }
+    closeModal('shl-add');
+    resetShlModal();
+    loadTable('shelters');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function resetShlModal() {
+  editShlId = null;
+  document.getElementById('shl-modal-title').textContent = 'Add Shelter';
+  document.getElementById('shl-submit-btn').textContent  = 'INSERT Record';
+  document.getElementById('sh-id').readOnly = false;
+  ['sh-id','sh-cap','sh-occ','sh-city','sh-district','sh-lat','sh-lng'].forEach(i=>document.getElementById(i).value='');
+}
+
+// ============================================================
+// SUPPLIES CRUD
+// ============================================================
+async function openModal_supAdd() {
+  try {
+    const hubs = await api('GET', '/hubs');
+    document.getElementById('su-hub').innerHTML = hubs.map(h =>
+      `<option value="${h.HUBID}">${h.HUBID} (${h.OPERATIONALSTATUS})</option>`).join('');
+    _origOpen('sup-add');
+  } catch (e) {
+    toast(e.message || 'Failed to load hubs', 'err');
+  }
+}
+
+function updateSubLabel() {
+  const labels = { Food:'Food Type', Medical:'Med Type', Equipment:'Equip Type' };
+  document.getElementById('su-sublabel').textContent = labels[document.getElementById('su-type').value];
+}
+
+async function submitSupply() {
+  const body = {
+    supplyid: document.getElementById('su-id').value.trim(),
+    supplyname: document.getElementById('su-name').value,
+    supplytype: document.getElementById('su-type').value,
+    subtype: document.getElementById('su-sub').value,
+    quantity: parseInt(document.getElementById('su-qty').value)||0,
+    expirydate: document.getElementById('su-expiry').value||null,
+    hubid: document.getElementById('su-hub').value
+  };
+  try {
+    await api('POST', '/supplies', body);
+    addLog('INSERT','SUPPLY', body.supplyid);
+    toast(`Supply ${body.supplyid} inserted`);
+    closeModal('sup-add');
+    loadTable('supplies');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function editSupplyModal(id, qty) {
+  const newQty = prompt(`UPDATE SUPPLY — New Quantity for ${id}:`, qty);
+  if (newQty === null) return;
+  api('PUT', `/supplies/${id}`, { quantity: parseInt(newQty) })
+    .then(() => { addLog('UPDATE','SUPPLY',id); toast(`Supply ${id} updated`); loadTable('supplies'); renderLog(); })
+    .catch(e => toast(e.message,'err'));
+}
+
+// ============================================================
+// HUBS CRUD
+// ============================================================
+async function submitHub() {
+  const body = {
+    hubid: document.getElementById('hu-id').value.trim(),
+    operationalstatus: document.getElementById('hu-status').value,
+    storagecapacity: parseInt(document.getElementById('hu-cap').value)||0,
+    latitude: parseFloat(document.getElementById('hu-lat').value)||0,
+    longitude: parseFloat(document.getElementById('hu-lng').value)||0
+  };
+  try {
+    await api('POST', '/hubs', body);
+    addLog('INSERT','LOGISTICS_HUB', body.hubid);
+    toast(`Hub ${body.hubid} inserted`);
+    closeModal('hub-add');
+    loadTable('hubs');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function editHubModal(id, status, cap) {
+  const newStatus = prompt(`UPDATE LOGISTICS_HUB — Status for ${id} (Active/Inactive/Maintenance):`, status);
+  if (newStatus === null) return;
+  api('PUT', `/hubs/${id}`, { operationalstatus: newStatus, storagecapacity: cap })
+    .then(() => { addLog('UPDATE','LOGISTICS_HUB',id); toast(`Hub ${id} updated`); loadTable('hubs'); renderLog(); })
+    .catch(e => toast(e.message,'err'));
+}
+
+// ============================================================
+// ORGS CRUD
+// ============================================================
+let editOrgId = null;
+
+function editOrgModal(id, name, type, phone, email) {
+  editOrgId = id;
+  document.getElementById('org-modal-title').textContent = 'Edit Organization';
+  document.getElementById('org-submit-btn').textContent  = 'UPDATE Record';
+  document.getElementById('or-id').value    = id;
+  document.getElementById('or-id').readOnly = true;
+  document.getElementById('or-name').value  = name;
+  document.getElementById('or-type').value  = type;
+  document.getElementById('or-phone').value = phone;
+  document.getElementById('or-email').value = email;
+  openModal('org-add');
+}
+
+async function submitOrg() {
+  const body = {
+    orgid: document.getElementById('or-id').value.trim(),
+    orgname: document.getElementById('or-name').value,
+    orgtype: document.getElementById('or-type').value,
+    phone: document.getElementById('or-phone').value,
+    email: document.getElementById('or-email').value
+  };
+  try {
+    if (editOrgId) {
+      await api('PUT', `/orgs/${editOrgId}`, body);
+      addLog('UPDATE','ORGANIZATION', editOrgId);
+      toast(`Org ${editOrgId} updated`);
+    } else {
+      await api('POST', '/orgs', body);
+      addLog('INSERT','ORGANIZATION', body.orgid);
+      toast(`Org ${body.orgid} inserted`);
+    }
+    closeModal('org-add');
+    resetOrgModal();
+    loadTable('orgs');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function resetOrgModal() {
+  editOrgId = null;
+  document.getElementById('org-modal-title').textContent = 'Add Organization';
+  document.getElementById('org-submit-btn').textContent  = 'INSERT Record';
+  document.getElementById('or-id').readOnly = false;
+  ['or-id','or-name','or-type','or-phone','or-email'].forEach(i=>document.getElementById(i).value='');
+}
+
+// ============================================================
+// DONORS CRUD
+// ============================================================
+function editDonorModal(id, name, contact) {
+  const newName = prompt(`UPDATE DONOR — Name for ${id}:`, name);
+  if (newName === null) return;
+  api('PUT', `/donors/${id}`, { donorname: newName, donorcontact: contact })
+    .then(() => { addLog('UPDATE','DONOR',id); toast(`Donor ${id} updated`); loadTable('donors'); renderLog(); })
+    .catch(e => toast(e.message,'err'));
+}
+
+async function submitDonor() {
+  const body = {
+    donorid: document.getElementById('dn-id').value.trim(),
+    donorname: document.getElementById('dn-name').value,
+    donorcontact: document.getElementById('dn-contact').value
+  };
+  try {
+    await api('POST', '/donors', body);
+    addLog('INSERT','DONOR', body.donorid);
+    toast(`Donor ${body.donorid} inserted`);
+    closeModal('don-add');
+    loadTable('donors');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+// ============================================================
+// DONATIONS CRUD
+// ============================================================
+let editDntId = null;
+
+function editDonationModal(id, status, amount) {
+  editDntId = id;
+  document.getElementById('dnt-modal-title').textContent = 'Edit Donation';
+  document.getElementById('dnt-submit-btn').textContent  = 'UPDATE Record';
+  document.getElementById('dt-id').value     = id;
+  document.getElementById('dt-id').readOnly  = true;
+  document.getElementById('dt-status').value = status;
+  document.getElementById('dt-amount').value = amount;
+  openModal('dnt-add');
+}
+
+async function submitDonation() {
+  const body = {
+    donationid: document.getElementById('dt-id').value.trim(),
+    amount: parseFloat(document.getElementById('dt-amount').value),
+    donationtype: document.getElementById('dt-type').value,
+    donationdate: document.getElementById('dt-date').value,
+    status: document.getElementById('dt-status').value
+  };
+  try {
+    if (editDntId) {
+      await api('PUT', `/donations/${editDntId}`, body);
+      addLog('UPDATE','DONATION', editDntId);
+      toast(`Donation ${editDntId} updated`);
+    } else {
+      await api('POST', '/donations', body);
+      addLog('INSERT','DONATION', body.donationid);
+      toast(`Donation ${body.donationid} inserted`);
+    }
+    closeModal('dnt-add');
+    resetDntModal();
+    loadTable('donations');
+    renderLog();
+  } catch(e) { toast(e.message,'err'); }
+}
+
+function resetDntModal() {
+  editDntId = null;
+  document.getElementById('dnt-modal-title').textContent = 'Add Donation';
+  document.getElementById('dnt-submit-btn').textContent  = 'INSERT Record';
+  document.getElementById('dt-id').readOnly = false;
+  ['dt-id','dt-amount','dt-type','dt-date'].forEach(i=>document.getElementById(i).value='');
+}
+
+// ============================================================
+// Override openModal to handle async variants
+// ============================================================
+const _origOpen = openModal;
+window.openModal = function(id) {
+  if (id === 'vic-add') { openModal_vicAdd(); return; }
+  if (id === 'vol-add') { openModal_volAdd(); return; }
+  if (id === 'sup-add') { openModal_supAdd(); return; }
+  _origOpen(id);
+};
+
+// ============================================================
+// INIT
+// ============================================================
+loadDashboard();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+## Node / dependencies
+node_modules/
+
+## Env files
+.env
+
+## Runtime logs
+*.log
+backend/log.txt
+
+## OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
