@@ -61,4 +61,4 @@ node server.js
 **Manal Shahnawaz** — BS Software Engineering, FAST-NUCES (CF Campus)  
 **Musferah** — BS Software Engineering, FAST-NUCES (CF Campus)  
 📧 manalshahnawaz1@gmail.com  
-🔗 [LinkedIn](https://linkedin.com/in/manal-shahnawaz-)
+🔗 [LinkedIn](https://linkedin.com/in/manal-shahnawaz-2176193b3)
